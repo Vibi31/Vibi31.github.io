@@ -82,7 +82,7 @@
 
     <script>
         // Initialize EmailJS
-        emailjs.init('your_user_id'); // Replace 'your_user_id' with your EmailJS user ID
+        emailjs.init('uzRzidPrUymVo71yb'); // Replace 'your_user_id' with your EmailJS user ID
 
         const form = document.getElementById('survey-form');
 
@@ -94,7 +94,7 @@
             const data = Object.fromEntries(formData.entries());
 
             // Send email via EmailJS
-            emailjs.send('your_service_id', 'your_template_id', data)
+            emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
                 .then(() => {
                     alert('Thank you! Your survey has been submitted.');
                     form.reset();
