@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Survey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-size: 1.1rem;
+            color: #333;
+        }
+        input, textarea, select, button {
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Survey</h1>
+        <form id="survey-form">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="feedback">Your Feedback</label>
+            <textarea id="feedback" name="feedback" rows="5" required></textarea>
+
+            <label for="rating">Rate Us</label>
+            <select id="rating" name="rating">
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        emailjs.init('your_user_id'); // Replace 'your_user_id' with your EmailJS user ID
+
+        const form = document.getElementById('survey-form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Send email via EmailJS
+            emailjs.send('your_service_id', 'your_template_id', data)
+                .then(() => {
+                    alert('Thank you! Your survey has been submitted.');
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error sending email:', error);
+                    alert('There was an error submitting your survey. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>
