@@ -52,19 +52,12 @@
             border-radius: 5px;
             background-color: #f9f9f9;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            transform: scale(1);
         }
 
         .rating-box button:hover {
             border-color: #007BFF;
-        }
-
-        .rating-box button.green {
-            background-color: #d4edda;
-        }
-
-        .rating-box button.red {
-            background-color: #f8d7da;
         }
 
         .comment-box {
@@ -124,6 +117,7 @@
         <h1>Survey</h1>
 
         <form id="survey-form">
+            <!-- Questions -->
             <div class="question">
                 <div class="question-text">1. How would you rate the quality of our service?</div>
                 <div class="rating-box">
@@ -140,72 +134,8 @@
                 </div>
             </div>
 
-            <div class="question">
-                <div class="question-text">2. How satisfied are you with the speed of our response?</div>
-                <div class="rating-box">
-                    <button type="button" onclick="rate(this, 1)">1</button>
-                    <button type="button" onclick="rate(this, 2)">2</button>
-                    <button type="button" onclick="rate(this, 3)">3</button>
-                    <button type="button" onclick="rate(this, 4)">4</button>
-                    <button type="button" onclick="rate(this, 5)">5</button>
-                    <button type="button" onclick="rate(this, 6)">6</button>
-                    <button type="button" onclick="rate(this, 7)">7</button>
-                    <button type="button" onclick="rate(this, 8)">8</button>
-                    <button type="button" onclick="rate(this, 9)">9</button>
-                    <button type="button" onclick="rate(this, 10)">10</button>
-                </div>
-            </div>
-
-            <div class="question">
-                <div class="question-text">3. How likely are you to recommend us to others?</div>
-                <div class="rating-box">
-                    <button type="button" onclick="rate(this, 1)">1</button>
-                    <button type="button" onclick="rate(this, 2)">2</button>
-                    <button type="button" onclick="rate(this, 3)">3</button>
-                    <button type="button" onclick="rate(this, 4)">4</button>
-                    <button type="button" onclick="rate(this, 5)">5</button>
-                    <button type="button" onclick="rate(this, 6)">6</button>
-                    <button type="button" onclick="rate(this, 7)">7</button>
-                    <button type="button" onclick="rate(this, 8)">8</button>
-                    <button type="button" onclick="rate(this, 9)">9</button>
-                    <button type="button" onclick="rate(this, 10)">10</button>
-                </div>
-            </div>
-
-            <div class="question">
-                <div class="question-text">4. How would you rate the professionalism of our staff?</div>
-                <div class="rating-box">
-                    <button type="button" onclick="rate(this, 1)">1</button>
-                    <button type="button" onclick="rate(this, 2)">2</button>
-                    <button type="button" onclick="rate(this, 3)">3</button>
-                    <button type="button" onclick="rate(this, 4)">4</button>
-                    <button type="button" onclick="rate(this, 5)">5</button>
-                    <button type="button" onclick="rate(this, 6)">6</button>
-                    <button type="button" onclick="rate(this, 7)">7</button>
-                    <button type="button" onclick="rate(this, 8)">8</button>
-                    <button type="button" onclick="rate(this, 9)">9</button>
-                    <button type="button" onclick="rate(this, 10)">10</button>
-                </div>
-            </div>
-
-            <div class="question">
-                <div class="question-text">5. How satisfied are you with the overall experience?</div>
-                <div class="rating-box">
-                    <button type="button" onclick="rate(this, 1)">1</button>
-                    <button type="button" onclick="rate(this, 2)">2</button>
-                    <button type="button" onclick="rate(this, 3)">3</button>
-                    <button type="button" onclick="rate(this, 4)">4</button>
-                    <button type="button" onclick="rate(this, 5)">5</button>
-                    <button type="button" onclick="rate(this, 6)">6</button>
-                    <button type="button" onclick="rate(this, 7)">7</button>
-                    <button type="button" onclick="rate(this, 8)">8</button>
-                    <button type="button" onclick="rate(this, 9)">9</button>
-                    <button type="button" onclick="rate(this, 10)">10</button>
-                </div>
-            </div>
-
             <div class="comment-box">
-                <textarea name="feedback" placeholder="Del gjerne det du likte og ikke likte. Vi prøver å kontinuerlig å forbedre vårt service."></textarea>
+                <textarea name="feedback" placeholder="Share your feedback with us."></textarea>
             </div>
 
             <button type="submit">Submit</button>
@@ -239,13 +169,14 @@
 
         function rate(button, value) {
             const buttons = button.parentNode.querySelectorAll('button');
-            buttons.forEach(btn => btn.classList.remove('green', 'red'));
-
-            if (value >= 6) {
-                button.classList.add('green');
-            } else {
-                button.classList.add('red');
-            }
+            buttons.forEach((btn) => {
+                const gradientStart = 255 - 20 * value;
+                const gradientEnd = 120 + 15 * value;
+                btn.style.backgroundColor = btn === button 
+                    ? `rgb(${gradientStart}, ${gradientEnd}, 200)`
+                    : "#f9f9f9";
+                btn.style.transform = btn === button ? "scale(1.1)" : "scale(1)";
+            });
         }
     </script>
 </body>
