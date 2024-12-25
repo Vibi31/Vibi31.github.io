@@ -171,54 +171,34 @@
         </form>
     </div>
 
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        emailjs.init('uzRzidPrUymVo71yb'); // Initialize with your EmailJS user ID
-
-        const colors = [
-            "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
-            "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
-        ];
-
-        document.querySelectorAll(".dynamic").forEach(button => {
-            button.addEventListener("click", function () {
-                this.parentElement.querySelectorAll("button").forEach(btn => {
-                    btn.style.backgroundColor = "#ffffff";
-                    btn.style.color = "#333";
-                });
-
-                const value = parseInt(this.dataset.value, 10);
-                this.style.backgroundColor = colors[value - 1];
-                this.style.color = "#ffffff";
-            });
-        });
-
+        // Initialize EmailJS
+        emailjs.init('uzRzidPrUymVo71yb'); // Replace 'your_user_id' with your EmailJS user ID
         const form = document.getElementById('survey-form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent form submission (default behavior)
-
-            const data = {
-                feedback: document.getElementById('feedback').value,
-                q1_rating: getRating('q1'),
-                q2_rating: getRating('q2'),
-                q3_rating: getRating('q3')
-            };
-
-            // Send the email via EmailJS
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            // Send email via EmailJS
             emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
                 .then(() => {
                     alert('Thank you! Your survey has been submitted.');
-                    form.reset();  // Reset form after submission
+                    form.reset();
                 })
-                .catch((error) => {
-                    alert('Failed to send survey. Please try again later.');
-                    console.error('Error:', error);
+                .catch(error => {
+                    console.error('Error sending email:', error);
+                    alert('There was an error submitting your survey. Please try again.');
                 });
         });
-
-        function getRating(questionId) {
-            const selectedButton = document.querySelector(`#${questionId} .dynamic[style*="background-color"]`);
-            return selectedButton ? selectedButton.dataset.value : null;
+        function rate(button, value) {
+            const buttons = button.parentNode.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('green', 'red'));
+            if (value >= 6) {
+                button.classList.add('green');
+            } else {
+                button.classList.add('red');
+            }
         }
     </script>
 
