@@ -111,7 +111,8 @@
         <h1>Survey</h1>
 
         <form id="survey-form">
-            <div class="question">
+            <!-- Question 1 -->
+            <div class="question" id="q1">
                 <div class="question-text">1. How would you rate the quality of our service?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -126,8 +127,10 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
-                <div class="question-text">1. How would you rate the quality of our service?</div>
+
+            <!-- Question 2 -->
+            <div class="question" id="q2">
+                <div class="question-text">2. How would you rate the user-friendliness of our website?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
@@ -141,8 +144,10 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
-                <div class="question-text">1. How would you rate the quality of our service?</div>
+
+            <!-- Question 3 -->
+            <div class="question" id="q3">
+                <div class="question-text">3. How would you rate the helpfulness of our customer support?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
@@ -156,51 +161,17 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
-                <div class="question-text">1. How would you rate the quality of our service?</div>
-                <div class="rating-box">
-                    <button type="button" class="dynamic" data-value="1">1</button>
-                    <button type="button" class="dynamic" data-value="2">2</button>
-                    <button type="button" class="dynamic" data-value="3">3</button>
-                    <button type="button" class="dynamic" data-value="4">4</button>
-                    <button type="button" class="dynamic" data-value="5">5</button>
-                    <button type="button" class="dynamic" data-value="6">6</button>
-                    <button type="button" class="dynamic" data-value="7">7</button>
-                    <button type="button" class="dynamic" data-value="8">8</button>
-                    <button type="button" class="dynamic" data-value="9">9</button>
-                    <button type="button" class="dynamic" data-value="10">10</button>
-                </div>
-            </div>
-            <!-- Repeat the above question block for more questions, from line 'question' -->
-            
+
+            <!-- Comment Box -->
             <div class="comment-box">
-                <textarea name="feedback" placeholder="Please share what you liked or disliked about our service. We are continuously trying to improve."></textarea>
+                <textarea id="feedback" name="feedback" placeholder="Please share what you liked or disliked about our service. We are continuously trying to improve."></textarea>
             </div>
 
             <button type="submit">Submit</button>
         </form>
     </div>
 
-    <script>
-        const colors = [
-            "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
-            "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
-        ];
-
-        document.querySelectorAll(".dynamic").forEach(button => {
-            button.addEventListener("click", function () {
-                // Reset other buttons
-                this.parentElement.querySelectorAll("button").forEach(btn => {
-                    btn.style.backgroundColor = "#ffffff";
-                    btn.style.color = "#333";
-                });
-
-                // Apply color to the clicked button
-                const value = parseInt(this.dataset.value, 10);
-                this.style.backgroundColor = colors[value - 1];
-                this.style.color = "#ffffff";
-            });
-        });
-    </script>
+    <!-- Link to the external script.js file -->
+    <script src="script.js"></script>
 </body>
 </html>
