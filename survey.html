@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -107,15 +106,14 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>Survey</h1>
 
         <form id="survey-form">
-            <div class="question" id="q1">
+            <div class="question">
                 <div class="question-text">1. How would you rate the quality of our service?</div>
-                <div class="rating-box">
+                <div class="rating-box" id="q1">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
                     <button type="button" class="dynamic" data-value="3">3</button>
@@ -128,51 +126,34 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-
-            <div class="question" id="q2">
-                <div class="question-text">2. How would you rate our customer support?</div>
-                <div class="rating-box">
-                    <button type="button" class="dynamic" data-value="1">1</button>
-                    <button type="button" class="dynamic" data-value="2">2</button>
-                    <button type="button" class="dynamic" data-value="3">3</button>
-                    <button type="button" class="dynamic" data-value="4">4</button>
-                    <button type="button" class="dynamic" data-value="5">5</button>
-                    <button type="button" class="dynamic" data-value="6">6</button>
-                    <button type="button" class="dynamic" data-value="7">7</button>
-                    <button type="button" class="dynamic" data-value="8">8</button>
-                    <button type="button" class="dynamic" data-value="9">9</button>
-                    <button type="button" class="dynamic" data-value="10">10</button>
-                </div>
-            </div>
-
-            <!-- Additional questions can go here -->
 
             <div class="comment-box">
-                <textarea id="feedback" name="feedback" placeholder="Please share your comments about our service."></textarea>
+                <textarea id="feedback" name="feedback" placeholder="Please share your thoughts or comments..."></textarea>
             </div>
 
             <button type="submit">Submit</button>
         </form>
     </div>
 
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        emailjs.init('uzRzidPrUymVo71yb');  // Replace this with your actual user ID
+        // Initialize EmailJS with your User ID
+        emailjs.init('uzRzidPrUymVo71yb'); // Your emailjs user ID
 
         const colors = [
             "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
             "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
         ];
 
+        // Highlight selected rating
         document.querySelectorAll(".dynamic").forEach(button => {
             button.addEventListener("click", function () {
-                // Reset other buttons
+                // Reset all other buttons
                 this.parentElement.querySelectorAll("button").forEach(btn => {
                     btn.style.backgroundColor = "#ffffff";
                     btn.style.color = "#333";
                 });
 
-                // Apply color to clicked button
+                // Set the clicked button's style
                 const value = parseInt(this.dataset.value, 10);
                 this.style.backgroundColor = colors[value - 1];
                 this.style.color = "#ffffff";
@@ -180,34 +161,42 @@
         });
 
         const form = document.getElementById('survey-form');
+        
+        // Submit form handler
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            const data = {
-                feedback: document.getElementById('feedback').value,  // Get feedback from the comment box
-                q1_rating: getRating('q1'),
-                q2_rating: getRating('q2'),
-                // Add more questions if needed
-            };
+            // Collect form data dynamically
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
-            emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
-                .then(function (response) {
+            // Collect the ratings
+            const ratingButtons = form.querySelectorAll('.dynamic');
+            const ratings = {};
+
+            ratingButtons.forEach(button => {
+                if (button.style.backgroundColor !== 'rgb(255, 255, 255)') {
+                    const questionId = button.closest('.question').id;
+                    ratings[questionId + '_rating'] = button.dataset.value;
+                }
+            });
+
+            // Add ratings data to the collected form data
+            const allData = { ...data, ...ratings };
+
+            // Send the data to EmailJS
+            emailjs.send('service_5y79wro', 'template_mwx7pyc', allData)
+                .then(function(response) {
                     alert('Thank you! Your survey has been submitted.');
-                    form.reset();  // Clear form after submission
+                    form.reset();
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     alert('There was an error. Please try again later.');
                     console.log('Error:', error);
                 });
         });
-
-        // Helper function to get the selected rating
-        function getRating(questionId) {
-            const selectedButton = document.querySelector(`#${questionId} .dynamic[style*="background-color"]`);
-            return selectedButton ? selectedButton.dataset.value : null;
-        }
     </script>
 
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </body>
-
 </html>
