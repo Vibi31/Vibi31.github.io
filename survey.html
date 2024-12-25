@@ -202,5 +202,62 @@
             });
         });
     </script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS
+        emailjs.init('uzRzidPrUymVo71yb'); // Replace 'your_user_id' with your EmailJS user ID
+
+        const colors = [
+            "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
+            "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
+        ];
+
+        // Handle rating button clicks to store selected values
+        document.querySelectorAll(".dynamic").forEach(button => {
+            button.addEventListener("click", function () {
+                // Reset other buttons
+                this.parentElement.querySelectorAll("button").forEach(btn => {
+                    btn.style.backgroundColor = "#ffffff";
+                    btn.style.color = "#333";
+                });
+
+                // Apply color to the clicked button
+                const value = parseInt(this.dataset.value, 10);
+                this.style.backgroundColor = colors[value - 1];
+                this.style.color = "#ffffff";
+            });
+        });
+
+        const form = document.getElementById('survey-form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Collect form data
+            const data = {
+                feedback: document.getElementById('feedback').value,
+                q1_rating: getRating('q1'),
+                q2_rating: getRating('q2'),
+                // Add more questions here
+            };
+
+            // Send email via EmailJS
+            emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
+                .then(() => {
+                    alert('Thank you! Your survey has been submitted.');
+                    form.reset();
+                })
+                .catch((error) => {
+                    alert('Failed to send survey. Please try again later.');
+                    console.error('Error:', error);
+                });
+        });
+
+        // Helper function to get the selected rating for a question
+        function getRating(questionId) {
+            const selectedButton = document.querySelector(`#${questionId} .dynamic[style*="background-color"]`);
+            return selectedButton ? selectedButton.dataset.value : null;
+        }
+    </script>
+    
 </body>
 </html>
