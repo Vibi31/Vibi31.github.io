@@ -111,8 +111,7 @@
         <h1>Survey</h1>
 
         <form id="survey-form">
-            <!-- Question 1 -->
-            <div class="question" id="q1">
+            <div class="question">
                 <div class="question-text">1. How would you rate the quality of our service?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -127,10 +126,8 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-
-            <!-- Question 2 -->
-            <div class="question" id="q2">
-                <div class="question-text">2. please work</div>
+            <div class="question">
+                <div class="question-text">1. How would you rate the quality of our service?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
@@ -144,10 +141,8 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-
-            <!-- Question 3 -->
-            <div class="question" id="q3">
-                <div class="question-text">3. How would you rate the helpfulness of our customer support?</div>
+            <div class="question">
+                <div class="question-text">1. How would you rate the quality of our service?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
@@ -161,10 +156,25 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-
-            <!-- Comment Box -->
+            <div class="question">
+                <div class="question-text">1. How would you rate the quality of our service?</div>
+                <div class="rating-box">
+                    <button type="button" class="dynamic" data-value="1">1</button>
+                    <button type="button" class="dynamic" data-value="2">2</button>
+                    <button type="button" class="dynamic" data-value="3">3</button>
+                    <button type="button" class="dynamic" data-value="4">4</button>
+                    <button type="button" class="dynamic" data-value="5">5</button>
+                    <button type="button" class="dynamic" data-value="6">6</button>
+                    <button type="button" class="dynamic" data-value="7">7</button>
+                    <button type="button" class="dynamic" data-value="8">8</button>
+                    <button type="button" class="dynamic" data-value="9">9</button>
+                    <button type="button" class="dynamic" data-value="10">10</button>
+                </div>
+            </div>
+            <!-- Repeat the above question block for more questions, from line 'question' -->
+            
             <div class="comment-box">
-                <textarea id="feedback" name="feedback" placeholder="Please share what you liked or disliked about our service. We are continuously trying to improve."></textarea>
+                <textarea name="feedback" placeholder="Please share what you liked or disliked about our service. We are continuously trying to improve."></textarea>
             </div>
 
             <button type="submit">Submit</button>
@@ -172,59 +182,25 @@
     </div>
 
     <script>
-        // Initialize EmailJS
-        emailjs.init('uzRzidPrUymVo71yb'); // Replace with your EmailJS user ID
-        const form = document.getElementById('survey-form');
-        
-        // Event listener for form submission
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent default form submission
+        const colors = [
+            "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
+            "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
+        ];
 
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            // Get ratings for all questions
-            data.q1_rating = getRating('q1');
-            data.q2_rating = getRating('q2');
-            data.q3_rating = getRating('q3');
-
-            // Send email via EmailJS
-            emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
-                .then(() => {
-                    alert('Thank you! Your survey has been submitted.');
-                    form.reset();  // Reset form after submission
-                })
-                .catch((error) => {
-                    console.error('Error sending email:', error);
-                    alert('There was an error submitting your survey. Please try again.');
+        document.querySelectorAll(".dynamic").forEach(button => {
+            button.addEventListener("click", function () {
+                // Reset other buttons
+                this.parentElement.querySelectorAll("button").forEach(btn => {
+                    btn.style.backgroundColor = "#ffffff";
+                    btn.style.color = "#333";
                 });
-        });
 
-        // Rating color change function
-        function rate(button, value) {
-            const buttons = button.parentNode.querySelectorAll('button');
-            buttons.forEach(btn => btn.classList.remove('green', 'red'));  // Reset previous ratings
-            if (value >= 6) {
-                button.classList.add('green');  // Color green for rating 6 and above
-            } else {
-                button.classList.add('red');  // Color red for rating below 6
-            }
-        }
-
-        // Get rating from the selected button in each question
-        function getRating(questionId) {
-            const selectedButton = document.querySelector(`#${questionId} .dynamic[style*="background-color"]`);
-            return selectedButton ? selectedButton.dataset.value : null;
-        }
-
-        // Add click event to each dynamic button
-        document.querySelectorAll('.dynamic').forEach(button => {
-            button.addEventListener('click', function() {
+                // Apply color to the clicked button
                 const value = parseInt(this.dataset.value, 10);
-                rate(this, value);
+                this.style.backgroundColor = colors[value - 1];
+                this.style.color = "#ffffff";
             });
         });
-
     </script>
 </body>
 </html>
