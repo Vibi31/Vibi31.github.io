@@ -50,9 +50,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
             background-color: #ffffff;
             color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .comment-box {
@@ -111,9 +111,9 @@
         <h1>Survey</h1>
 
         <form id="survey-form">
-            <div class="question">
-                <div class="question-text">1. How would you rate the quality of our service?</div>
-                <div class="rating-box" id="q1">
+            <div class="question" id="q1">
+                <div class="question-text">How would you rate the quality of our service?</div>
+                <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
                     <button type="button" class="dynamic" data-value="2">2</button>
                     <button type="button" class="dynamic" data-value="3">3</button>
@@ -135,68 +135,65 @@
         </form>
     </div>
 
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
         // Initialize EmailJS with your User ID
-        emailjs.init('uzRzidPrUymVo71yb'); // Your emailjs user ID
+        emailjs.init('uzRzidPrUymVo71yb'); // Replace this with your EmailJS User ID
 
         const colors = [
             "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
             "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
         ];
 
-        // Highlight selected rating
+        // Rating buttons click handler
         document.querySelectorAll(".dynamic").forEach(button => {
             button.addEventListener("click", function () {
-                // Reset all other buttons
+                // Reset the background color of all rating buttons
                 this.parentElement.querySelectorAll("button").forEach(btn => {
                     btn.style.backgroundColor = "#ffffff";
                     btn.style.color = "#333";
                 });
 
-                // Set the clicked button's style
+                // Set background color to the clicked button
                 const value = parseInt(this.dataset.value, 10);
                 this.style.backgroundColor = colors[value - 1];
                 this.style.color = "#ffffff";
             });
         });
 
+        // Survey form submit handler
         const form = document.getElementById('survey-form');
-        
-        // Submit form handler
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Collect form data dynamically
+            // Collect the form data
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
 
-            // Collect the ratings
-            const ratingButtons = form.querySelectorAll('.dynamic');
+            // Collect the selected rating values from buttons (add this part for each question)
             const ratings = {};
-
-            ratingButtons.forEach(button => {
-                if (button.style.backgroundColor !== 'rgb(255, 255, 255)') {
-                    const questionId = button.closest('.question').id;
-                    ratings[questionId + '_rating'] = button.dataset.value;
+            document.querySelectorAll('.question').forEach((question, index) => {
+                const selectedButton = question.querySelector('button[style*="background-color"]');
+                if (selectedButton) {
+                    const questionKey = 'q' + (index + 1) + '_rating';
+                    ratings[questionKey] = selectedButton.dataset.value;
                 }
             });
 
-            // Add ratings data to the collected form data
-            const allData = { ...data, ...ratings };
+            // Combine all data (form fields + ratings)
+            const allData = {...data, ...ratings};
 
-            // Send the data to EmailJS
+            // Send data using EmailJS
             emailjs.send('service_5y79wro', 'template_mwx7pyc', allData)
                 .then(function(response) {
                     alert('Thank you! Your survey has been submitted.');
-                    form.reset();
+                    form.reset();  // Reset the form
                 })
                 .catch(function(error) {
                     alert('There was an error. Please try again later.');
-                    console.log('Error:', error);
+                    console.error('Error:', error);
                 });
         });
     </script>
-
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </body>
 </html>
