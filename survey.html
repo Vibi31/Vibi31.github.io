@@ -3,107 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Survey</title>
+    <title>Survey</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
+            margin: 20px;
+            line-height: 1.6;
         }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+
         h1 {
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
         }
-        form {
+
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .question-text {
+            margin-bottom: 10px;
+        }
+
+        .rating-box {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            justify-content: space-around;
         }
-        label {
-            font-size: 1.1rem;
-            color: #333;
-        }
-        input, textarea, select, button {
-            font-size: 1rem;
-            padding: 10px;
-            border-radius: 5px;
+
+        .rating-box button {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
             border: 1px solid #ccc;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #007BFF;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .rating-box button:hover {
+            border-color: #777;
+        }
+
+        .rating-box button.green {
+            background-color: #d4edda;
+        }
+
+        .rating-box button.red {
+            background-color: #f8d7da;
+        }
+
+        .comment-box {
+            margin-top: 20px;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px;
+            color: #333;
+            resize: none;
+        }
+
+        .comment-box textarea::placeholder {
+            color: #999;
+            opacity: 0.8;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Web Survey</h1>
-        <form id="survey-form">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" required>
+    <h1>Survey</h1>
 
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="email" required>
+    <div class="question">
+        <div class="question-text">1. How would you rate the quality of our service?</div>
+        <div class="rating-box">
+            <button onclick="rate(this, 1)">1</button>
+            <button onclick="rate(this, 2)">2</button>
+            <button onclick="rate(this, 3)">3</button>
+            <button onclick="rate(this, 4)">4</button>
+            <button onclick="rate(this, 5)">5</button>
+            <button onclick="rate(this, 6)">6</button>
+            <button onclick="rate(this, 7)">7</button>
+            <button onclick="rate(this, 8)">8</button>
+            <button onclick="rate(this, 9)">9</button>
+            <button onclick="rate(this, 10)">10</button>
+        </div>
+    </div>
 
-            <label for="feedback">Your Feedback</label>
-            <textarea id="feedback" name="feedback" rows="5" required></textarea>
+    <div class="question">
+        <div class="question-text">2. How satisfied are you with the speed of our response?</div>
+        <div class="rating-box">
+            <button onclick="rate(this, 1)">1</button>
+            <button onclick="rate(this, 2)">2</button>
+            <button onclick="rate(this, 3)">3</button>
+            <button onclick="rate(this, 4)">4</button>
+            <button onclick="rate(this, 5)">5</button>
+            <button onclick="rate(this, 6)">6</button>
+            <button onclick="rate(this, 7)">7</button>
+            <button onclick="rate(this, 8)">8</button>
+            <button onclick="rate(this, 9)">9</button>
+            <button onclick="rate(this, 10)">10</button>
+        </div>
+    </div>
 
-            <label for="rating">Rate Us</label>
-            <select id="rating" name="rating">
-                <option value="Excellent">Excellent</option>
-                <option value="Good">Good</option>
-                <option value="Average">Average</option>
-                <option value="Poor">Poor</option>
-            </select>
+    <div class="question">
+        <div class="question-text">3. How likely are you to recommend us to others?</div>
+        <div class="rating-box">
+            <button onclick="rate(this, 1)">1</button>
+            <button onclick="rate(this, 2)">2</button>
+            <button onclick="rate(this, 3)">3</button>
+            <button onclick="rate(this, 4)">4</button>
+            <button onclick="rate(this, 5)">5</button>
+            <button onclick="rate(this, 6)">6</button>
+            <button onclick="rate(this, 7)">7</button>
+            <button onclick="rate(this, 8)">8</button>
+            <button onclick="rate(this, 9)">9</button>
+            <button onclick="rate(this, 10)">10</button>
+        </div>
+    </div>
 
-            <button type="submit">Submit</button>
-        </form>
+    <div class="question">
+        <div class="question-text">4. How would you rate the professionalism of our staff?</div>
+        <div class="rating-box">
+            <button onclick="rate(this, 1)">1</button>
+            <button onclick="rate(this, 2)">2</button>
+            <button onclick="rate(this, 3)">3</button>
+            <button onclick="rate(this, 4)">4</button>
+            <button onclick="rate(this, 5)">5</button>
+            <button onclick="rate(this, 6)">6</button>
+            <button onclick="rate(this, 7)">7</button>
+            <button onclick="rate(this, 8)">8</button>
+            <button onclick="rate(this, 9)">9</button>
+            <button onclick="rate(this, 10)">10</button>
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="question-text">5. How satisfied are you with the overall experience?</div>
+        <div class="rating-box">
+            <button onclick="rate(this, 1)">1</button>
+            <button onclick="rate(this, 2)">2</button>
+            <button onclick="rate(this, 3)">3</button>
+            <button onclick="rate(this, 4)">4</button>
+            <button onclick="rate(this, 5)">5</button>
+            <button onclick="rate(this, 6)">6</button>
+            <button onclick="rate(this, 7)">7</button>
+            <button onclick="rate(this, 8)">8</button>
+            <button onclick="rate(this, 9)">9</button>
+            <button onclick="rate(this, 10)">10</button>
+        </div>
+    </div>
+
+    <div class="comment-box">
+        <textarea placeholder="Del gjerne det du likte og ikke likte. Vi prøver å kontinuerlig å forbedre vårt service."></textarea>
     </div>
 
     <script>
-        // Initialize EmailJS
-        emailjs.init('uzRzidPrUymVo71yb'); // Replace 'your_user_id' with your EmailJS user ID
+        function rate(button, value) {
+            const buttons = button.parentNode.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('green', 'red'));
 
-        const form = document.getElementById('survey-form');
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Collect form data
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            // Send email via EmailJS
-            emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
-                .then(() => {
-                    alert('Thank you! Your survey has been submitted.');
-                    form.reset();
-                })
-                .catch(error => {
-                    console.error('Error sending email:', error);
-                    alert('There was an error submitting your survey. Please try again.');
-                });
-        });
+            if (value >= 6) {
+                button.classList.add('green');
+            } else {
+                button.classList.add('red');
+            }
+        }
     </script>
 </body>
 </html>
