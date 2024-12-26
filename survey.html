@@ -85,7 +85,7 @@
     <div class="container">
         <h1>Survey</h1>
 
-        <form id="survey-form">
+        <form id="survey-form" method="POST" action="/submit">
 
             <div class="question" data-question="1">
                 <div class="question-text">1. Hvor fornøyd er du med tjenesten som ble levert?</div>
@@ -250,6 +250,7 @@
             </div>
             <!-- Repeat the above question block for more questions, from line 'question' -->
             <script>
+                document.addEventListener('DOMContentLoaded', function() {
     const colors = [
         "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
         "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
@@ -265,18 +266,21 @@
         button.addEventListener("click", function() {
             const value = parseInt(this.dataset.value, 10);  // Get the value of the clicked button
         
-            // Change the background color when a button is clicked
-            this.style.backgroundColor = colors[value - 1];
+                // Find the hidden input field related to the clicked question
+                const hiddenInput = this.closest('.question').querySelector('input[type="hidden"]');
 
-            // Update the hidden input with the selected value
-            const hiddenInput = this.closest('.question').querySelector('input[type="hidden"]');
-            hiddenInput.value = value;
+                // Update the value of the hidden input
+                hiddenInput.value = value;
+
+                // Change background color of clicked button
+                this.style.backgroundColor = colors[value - 1];
 
             // Reset all other buttons in the same rating box to default color
             this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
                 if (btn !== this) {
                     btn.style.backgroundColor = "#fff";  // Reset to default background color
                 }
+            });
             });
         });
     });
