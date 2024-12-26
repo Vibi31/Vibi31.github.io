@@ -274,6 +274,11 @@
                                 btn.style.backgroundColor = "#fff";  // Reset to default background color
                             }
                         });
+            // Save the selected value to hidden input for form submission
+            const question = this.closest('.question');
+            const questionId = question.dataset.question;
+            const hiddenInput = question.querySelector(`#rating${questionId}`);
+            hiddenInput.value = value; // Update the hidden input with the selected rating
                     });
                 });
             </script>
