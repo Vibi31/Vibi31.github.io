@@ -85,7 +85,7 @@
     <div class="container">
         <h1>Survey</h1>
 
-        <form id="survey-form" method="POST" action="/submit">
+        <form id="survey-form">
 
             <div class="question" data-question="1">
                 <div class="question-text">1. Hvor fornøyd er du med tjenesten som ble levert?</div>
@@ -249,83 +249,109 @@
                 <input type="hidden" name="rating10" id="rating10" value="No response">
             </div>
             <!-- Repeat the above question block for more questions, from line 'question' -->
-            <!-- Comment Box -->
-            <div class="question">
-                <p>Additional Comments (Optional)</p>
-                <textarea id="feedback1" placeholder="Gjerne del hva du likte eller ikke likte med tjenesten vår. Vi jobber kontinuerlig med å forbedre oss. (valgfritt)"></textarea>
-            </div>
+            <script>
+                const colors = [
+                    "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
+                    "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
+                ];
+            
+                // Remove any initial color (set to default white background on page load)
+                document.querySelectorAll(".dynamic").forEach(button => {
+                    button.style.backgroundColor = "#fff";
+                });
+            
+                // Event listener for each button to handle the click
+                document.querySelectorAll(".dynamic").forEach(button => {
+                    button.addEventListener("click", function() {
+                        const value = parseInt(this.dataset.value, 10);
+                    
+                        // Change background color when a button is clicked
+                        this.style.backgroundColor = colors[value - 1];
+            
+                        // Reset all other buttons in the same rating box to default color
+                        this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
+                            if (btn !== this) {
+                                btn.style.backgroundColor = "#fff";  // Reset to default background color
+                            }
+                        });
+            // Save the selected value to hidden input for form submission
+            const question = this.closest('.question');
+            const questionId = question.dataset.question;
+            const hiddenInput = question.querySelector(`#rating${questionId}`);
+            hiddenInput.value = value; // Update the hidden input with the selected rating
+                    });
+                });
+            </script>
 
-            <div class="question">
-                <p>Additional Comments (Optional)</p>
-                <textarea id="feedback2" placeholder="Vi setter pris på om du deler eventuelle jobbideer eller tjenester vi kan fokusere på i fremtiden. (valgfritt)"></textarea>
-            </div>
+            <form id="survey-form">
+                <!-- Other questions and inputs -->
+            
+                <!-- Comment Box 1 (Optional) -->
 
-            <!-- Submit Button -->
+                <div class="question">
+                    <p>Additional Comments (Optional)</p>
+                    <textarea id="feedback1" placeholder="Gjerne del hva du likte eller ikke likte med tjenesten vår. Vi jobber kontinuerlig med å forbedre oss. (valgfritt)"></textarea>
+                </div>
 
-    <button type="submit">Submit Survey</button>
-</form>
+                <!-- Comment Box 2 (Optional) -->
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.3/dist/email.min.js"></script>
-<script>
-emailjs.init('uzRzidPrUymVo71yb'); // Your EmailJS User ID
+                <div class="question">
+                    <p>Additional Comments (Optional)</p>
+                    <textarea id="feedback2" placeholder="Vi setter pris på om du deler eventuelle jobbideer eller tjenester vi kan fokusere på i fremtiden. (valgfritt)"></textarea>
+                </div>
+            <!-- Submit button -->
+            <button type="submit">Submit Survey</button>
 
-document.addEventListener('DOMContentLoaded', function() {
-    const colors = ["#F6412D", "#FF5607", "#FF9800", "#FFC100", 
-                    "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"];
-    
-    // Rating selection handler
-    document.querySelectorAll(".dynamic").forEach(button => {
-        button.addEventListener("click", function() {
-            const value = parseInt(this.dataset.value, 10);
-            const hiddenInput = this.closest('.question').querySelector('input[type="hidden"]');
-            hiddenInput.value = value;
-            this.style.backgroundColor = colors[value - 1];
-
-            // Reset other button colors
-            this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
-                if (btn !== this) {
-                    btn.style.backgroundColor = "#fff";
-                }
-            });
-        });
-    });
-
-    // Form submit handler
-    document.getElementById('survey-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent form default submission
+        </form>
         
-        // Get feedback comments
-        const formData = {
-            feedback1: document.getElementById('feedback1').value.trim() || 'No comments',
-            feedback2: document.getElementById('feedback2').value.trim() || 'No comments'
-        };
+    </div>
 
-        // Collect ratings for each question
-        document.querySelectorAll('.question').forEach((question, index) => {
-            const hiddenInput = question.querySelector('input[type="hidden"]');
-            formData[`rating${index + 1}`] = hiddenInput.value || 'No response'; // Add default value for empty ratings
+    <!-- EmailJS Script -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        emailjs.init('uzRzidPrUymVo71yb');  // Your EmailJS User ID
+
+         // Rating buttons click event handler
+         document.querySelectorAll('.rating-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const question = this.closest('.question');
+                
+                // Reset background color for all buttons in the same question
+                question.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
+                
+                // Apply the selected color to the clicked button
+                this.classList.add('selected');
+            });
         });
 
-        // Log form data to console for debugging
-        console.log("Form data to be sent to EmailJS:", formData);
+        // Handle form submit to collect data and send via EmailJS
+        document.getElementById('survey-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const formData = {};
 
-        // Send form data using EmailJS
-        emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
-            .then(function(response) {
-                console.log("Email sent successfully:", response); // Log successful response
-                alert("Survey submitted successfully!"); // Alert user for success
-                
-                // After sending email and confirmation, reset form data and redirect
-                document.getElementById('survey-form').reset();
-                setTimeout(function() {
-                    window.location.href = "thank_you.html"; // Redirect after success
-                }, 500); // Short delay to ensure form reset before redirect
-            }, function(error) {
-                alert("An error occurred. Please try again.");
-                console.error("Error sending email:", error); // Log error for debugging
+            // Collect ratings for each question
+            document.querySelectorAll('.question').forEach((question, index) => {
+                const selectedButton = question.querySelector('.rating-btn.selected');
+                formData[`rating${index + 1}`] = selectedButton ? selectedButton.dataset.value : 'No response';
             });
-    });
-});
-</script>
+            
+            // Collect feedback from both comment boxes
+            formData['feedback1'] = document.getElementById('feedback1').value.trim() || 'No comments';
+            formData['feedback2'] = document.getElementById('feedback2').value.trim() || 'No comments';
+
+            // Send data using EmailJS
+            emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
+                .then(() => {
+                    alert("Survey submitted successfully!");
+                    document.getElementById('survey-form').reset();
+                    window.location.href = "thank_you.html";  // Redirect after submission
+                })
+                .catch(err => {
+                    console.error("Error sending email:", err);
+                    alert("An error occurred, please try again.");
+                        });
+                });
+            </script>
 </body>
 </html>
