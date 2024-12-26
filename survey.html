@@ -7,9 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
         }
 
         .container {
@@ -23,19 +23,11 @@
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 20px;
         }
 
         .question {
             margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .question-text {
-            margin-bottom: 10px;
-            font-size: 1.2rem;
         }
 
         .rating-box {
@@ -50,13 +42,13 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            background-color: #ffffff;
+            background-color: #fff;
             color: #333;
         }
 
-        .comment-box {
-            margin-top: 20px;
+        .selected {
+            background-color: #4CAF50;
+            color: white;
         }
 
         .comment-box textarea {
@@ -65,15 +57,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-family: Arial, sans-serif;
-            font-size: 14px;
             padding: 10px;
-            color: #333;
             resize: none;
-        }
-
-        .comment-box textarea::placeholder {
-            color: #999;
-            opacity: 0.8;
         }
 
         button[type="submit"] {
@@ -93,7 +78,6 @@
             background-color: #0056b3;
         }
 
-
         
     </style>
 </head>
@@ -102,7 +86,8 @@
         <h1>Survey</h1>
 
         <form id="survey-form">
-            <div class="question">
+
+            <div class="question" data-question="1">
                 <div class="question-text">1. Hvor fornøyd er du med tjenesten som ble levert?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -117,7 +102,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="2">
                 <div class="question-text">2. Hvordan vil du vurdere hvor raskt tjenesten ble levert til deg?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -132,7 +117,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="3">
                 <div class="question-text">3. I hvilken grad innfridde tjenesten dine forventninger?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -147,7 +132,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="4">
                 <div class="question-text">4. Hvor fornøyd er du med kvaliteten på arbeidet som ble utført?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -162,7 +147,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="5">
                 <div class="question-text">5. Hvor fornøyd er du med kvaliteten på servicerapportene?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -177,7 +162,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="6">
                 <div class="question-text">6. Følte du at du fikk nok informasjon om utstyret/maskinen?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -192,7 +177,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="7">
                 <div class="question-text">7. Hvor enkelt var det å kontakte med vårt team? e-post/tlf/direkte</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -207,7 +192,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="8">
                 <div class="question-text">8. Hvordan vil du vurdere profesjonaliteten til vårt personale?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -222,7 +207,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="9">
                 <div class="question-text">9. Hvor sannsynlig er det at du vil anbefale vår tjeneste til andre?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -237,7 +222,7 @@
                     <button type="button" class="dynamic" data-value="10">10</button>
                 </div>
             </div>
-            <div class="question">
+            <div class="question" data-question="10">
                 <div class="question-text">10.  Hvordan vil du vurdere MedikalTeknikk sammenlignet med de tidligere servicefirmaene du har brukt?</div>
                 <div class="rating-box">
                     <button type="button" class="dynamic" data-value="1">1</button>
@@ -269,21 +254,22 @@
                 <!-- Other questions and inputs -->
             
                 <!-- Comment Box 1 (Optional) -->
-                <div class="comment-box">
-                    <textarea id="feedback1" name="feedback1" placeholder="Gjerne del hva du likte eller ikke likte med tjenesten vår. Vi jobber kontinuerlig med å forbedre oss. (valgfritt)"></textarea>
+
+                <div class="question">
+                    <p>Additional Comments (Optional)</p>
+                    <textarea id="feedback1" placeholder="Gjerne del hva du likte eller ikke likte med tjenesten vår. Vi jobber kontinuerlig med å forbedre oss. (valgfritt)"></textarea>
                 </div>
-            
+
                 <!-- Comment Box 2 (Optional) -->
-                <div class="comment-box">
-                    <textarea id="feedback2" name="feedback2" placeholder="Vi setter pris på om du deler eventuelle jobbideer eller tjenester vi kan fokusere på i fremtiden. (valgfritt)"></textarea>
+
+                <div class="question">
+                    <p>Additional Comments (Optional)</p>
+                    <textarea id="feedback2" placeholder="Vi setter pris på om du deler eventuelle jobbideer eller tjenester vi kan fokusere på i fremtiden. (valgfritt)"></textarea>
                 </div>
-            
-                <!-- Comment Box 3 (Optional) -->
-                <div class="comment-box">
-                    <textarea id="feedback3" name="feedback3" placeholder="Any final thoughts on our service? (valgfritt)"></textarea>
-                </div>
-                <input type="submit" value="Submit Survey">
-            </form>
+            <!-- Submit button -->
+            <button type="submit">Submit Survey</button>
+
+        </form>
         
     </div>
 
@@ -292,21 +278,36 @@
     <script type="text/javascript">
         emailjs.init('uzRzidPrUymVo71yb');  // Your EmailJS User ID
 
+         // Rating buttons click event handler
+         document.querySelectorAll('.rating-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const question = this.closest('.question');
+                
+                // Reset background color for all buttons in the same question
+                question.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
+                
+                // Apply the selected color to the clicked button
+                this.classList.add('selected');
+            });
+        });
+
+        // Handle form submit to collect data and send via EmailJS
         document.getElementById('survey-form').addEventListener('submit', function (e) {
             e.preventDefault();
             
-            // Prepare form data
             const formData = {};
 
+            // Collect ratings for each question
             document.querySelectorAll('.question').forEach((question, index) => {
                 const selectedButton = question.querySelector('.rating-btn.selected');
-                formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : 'No response';
+                formData[`rating${index + 1}`] = selectedButton ? selectedButton.dataset.value : 'No response';
             });
+            
+            // Collect feedback from both comment boxes
+            formData['feedback1'] = document.getElementById('feedback1').value.trim() || 'No comments';
+            formData['feedback2'] = document.getElementById('feedback2').value.trim() || 'No comments';
 
-            // Optional comment data
-            formData['Comments'] = document.getElementById('comment').value.trim() || 'No comments';
-
-            // Send data to EmailJS
+            // Send data using EmailJS
             emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
                 .then(() => {
                     alert("Survey submitted successfully!");
@@ -315,20 +316,7 @@
                 })
                 .catch(err => {
                     console.error("Error sending email:", err);
-                    alert("An error occurred. Please try again.");
-                });
-        });
-
-        // Add rating selection functionality
-        document.querySelectorAll('.rating-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const question = this.closest('.question');
-
-                // Remove selected class from all buttons in this question
-                question.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
-
-                // Add 'selected' class to clicked button
-                this.classList.add('selected');
+                    alert("An error occurred, please try again.");
                         });
                 });
             </script>
