@@ -254,10 +254,27 @@
                     "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
                     "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
                 ];
-        
+            
+                // Remove any initial color (set to default white background on page load)
                 document.querySelectorAll(".dynamic").forEach(button => {
-                    const value = parseInt(button.dataset.value, 10);
-                    button.style.backgroundColor = colors[value - 1];
+                    button.style.backgroundColor = "#fff";
+                });
+            
+                // Event listener for each button to handle the click
+                document.querySelectorAll(".dynamic").forEach(button => {
+                    button.addEventListener("click", function() {
+                        const value = parseInt(this.dataset.value, 10);
+                    
+                        // Change background color when a button is clicked
+                        this.style.backgroundColor = colors[value - 1];
+            
+                        // Reset all other buttons in the same rating box to default color
+                        this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
+                            if (btn !== this) {
+                                btn.style.backgroundColor = "#fff";  // Reset to default background color
+                            }
+                        });
+                    });
                 });
             </script>
 
