@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survey</title>
+    <title>Kundeundersøkelse</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -93,17 +93,8 @@
             background-color: #0056b3;
         }
 
-        @media screen and (max-width: 600px) {
-            .rating-box {
-                flex-wrap: wrap;
-                gap: 5px;
-            }
 
-            .rating-box button {
-                width: 30px;
-                height: 30px;
-            }
-        }
+        
     </style>
 </head>
 <body>
@@ -281,46 +272,55 @@
                     <textarea id="feedback3" name="feedback3" placeholder="Any final thoughts on our service? (valgfritt)"></textarea>
                 </div>
             
-            
+            <!-- Submit Button -->
             <button type="submit">Submit</button>
         </form>
     </div>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        function sendEmail(event) {
-            event.preventDefault(); // Prevent the default form submission
-    
-            // Extract form data
-            const form = event.target;
-            const formData = {
-            feedback1: document.getElementById('feedback1').value,
-            feedback2: document.getElementById('feedback2').value,
-            feedback3: document.getElementById('feedback3').value,
-            };
-    
-            // Add each question's responses to `formData`
-            document.querySelectorAll('.dynamic').forEach(button => {
-            if (button.style.backgroundColor !== "rgb(255, 255, 255)") {
-                const question = button.closest('.question').querySelector('.question-text').textContent.trim();
-                formData[question] = button.dataset.value; // Use the button value as the response
-            }
+        emailjs.init("uzRzidPrUymVo71yb");
+
+        // Colors for ratings
+        const colors = ["#F6412D", "#FF5607", "#FF9800", "#FFC100", "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"];
+
+        // Add event listeners to all rating buttons
+        document.querySelectorAll(".dynamic").forEach(button => {
+            button.addEventListener("click", function () {
+                // Reset other buttons in the same rating box
+                this.parentElement.querySelectorAll("button").forEach(btn => {
+                    btn.style.backgroundColor = "#ffffff";
+                    btn.style.color = "#333";
+                });
+
+                // Highlight selected button
+                const value = parseInt(this.dataset.value, 10);
+                this.style.backgroundColor = colors[value - 1];
+                this.style.color = "#ffffff";
             });
-    
-            // Send EmailJS message
-            emailjs
-            .send('service_5y79wro', 'template_mwx7pyc', formData)
-            .then(
-                response => {
-                alert('Survey submitted successfully!');
-                console.log('Success!', response.status, response.text);
-                },
-                error => {
-                alert('An error occurred while sending the survey. Please try again.');
-                console.error('Failed...', error);
-                }
-            );
-        }
-    
-        emailjs.init('uzRzidPrUymVo71yb'); // Replace 'YOUR_USER_ID' with your EmailJS user ID
+        });
+
+        // Send survey data on form submit
+        document.getElementById("survey-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Collect ratings and comments
+            const formData = {};
+            document.querySelectorAll(".question").forEach((question, index) => {
+                const selectedButton = question.querySelector(".dynamic[style*='background-color']");
+                const questionText = question.querySelector(".question-text").textContent.trim();
+                formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
+            });
+
+            // Add comments to formData
+            formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
+            formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
+            formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
+
+            // Send data using EmailJS
+            emailjs.send("service_5y79wro", "template_mwx7pyc", formData)
+                .then(() => alert("Survey submitted successfully!"))
+                .catch(err => console.error("Error sending email:", err));
+        });
     </script>
 </body>
 </html>
