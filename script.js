@@ -1,45 +1,27 @@
-// Initialize EmailJS
-emailjs.init('uzRzidPrUymVo71yb'); // Replace with your EmailJS user ID
+emailjs.init("uzRzidPrUymVo71yb");
 
-// Button click to handle rating and color change
-document.addEventListener("DOMContentLoaded", function () {
-    // Attach click events to dynamic rating buttons
-    const ratingButtons = document.querySelectorAll('.dynamic');
-    ratingButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const value = parseInt(this.getAttribute('data-value'));
-            rate(this, value);
-        });
+document.getElementById("survey-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Collect ratings
+    const ratings = {};
+    document.querySelectorAll(".question .rating-box").forEach((box, index) => {
+        const selectedButton = box.querySelector("button[style*='background-color']");
+        ratings[`rating${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
     });
 
-    // Form submission handler
-    const form = document.getElementById('survey-form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevents the default form submission
-        
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        
-        // Send data via EmailJS
-        emailjs.send('service_5y79wro', 'template_mwx7pyc', data)
-            .then(() => {
-                alert('Thank you! Your survey has been submitted.');
-                form.reset();
-            })
-            .catch(error => {
-                console.error('Error sending email:', error);
-                alert('There was an error submitting your survey. Please try again.');
-            });
-    });
-});
+    // Collect feedback
+    const feedback1 = document.getElementById("feedback1").value || "No response";
+    const feedback2 = document.getElementById("feedback2").value || "No response";
+    const feedback3 = document.getElementById("feedback3").value || "No response";
 
-// Function to handle rating click
-function rate(button, value) {
-    const buttons = button.parentNode.querySelectorAll('button');
-    buttons.forEach(btn => btn.classList.remove('green', 'red')); // Remove previous color classes
-    if (value >= 6) {
-        button.classList.add('green'); // If 6 or above, add green class
-    } else {
-        button.classList.add('red'); // If below 6, add red class
+    const data = { ...ratings, feedback1, feedback2, feedback3 };
+
+    try {
+        const result = await emailjs.send("service_5y79wro", "template_mwx7pyc", data);
+        alert("Survey submitted successfully!");
+        document.getElementById("survey-form").reset();
+    } catch (error) {
+        alert("Submission failed. Please try again.");
     }
-}
+});
