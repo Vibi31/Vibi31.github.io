@@ -267,60 +267,65 @@
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.3/dist/email.min.js"></script>
 <script>
-    emailjs.init('uzRzidPrUymVo71yb'); // Your EmailJS User ID
+emailjs.init('uzRzidPrUymVo71yb'); // Your EmailJS User ID
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const colors = ["#F6412D", "#FF5607", "#FF9800", "#FFC100", 
-                        "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"];
-        
-        // Rating selection handler
-        document.querySelectorAll(".dynamic").forEach(button => {
-            button.addEventListener("click", function() {
-                const value = parseInt(this.dataset.value, 10);
-                const hiddenInput = this.closest('.question').querySelector('input[type="hidden"]');
-                hiddenInput.value = value;
-                this.style.backgroundColor = colors[value - 1];
+document.addEventListener('DOMContentLoaded', function() {
+    const colors = ["#F6412D", "#FF5607", "#FF9800", "#FFC100", 
+                    "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"];
+    
+    // Rating selection handler
+    document.querySelectorAll(".dynamic").forEach(button => {
+        button.addEventListener("click", function() {
+            const value = parseInt(this.dataset.value, 10);
+            const hiddenInput = this.closest('.question').querySelector('input[type="hidden"]');
+            hiddenInput.value = value;
+            this.style.backgroundColor = colors[value - 1];
 
-                // Reset other button colors
-                this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
-                    if (btn !== this) {
-                        btn.style.backgroundColor = "#fff";
-                    }
-                });
+            // Reset other button colors
+            this.closest('.rating-box').querySelectorAll('button').forEach(btn => {
+                if (btn !== this) {
+                    btn.style.backgroundColor = "#fff";
+                }
             });
-        });
-
-        // Form submit handler
-        document.getElementById('survey-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent form default submission
-            
-            // Get feedback comments
-            const formData = {
-                feedback1: document.getElementById('feedback1').value.trim() || 'No comments',
-                feedback2: document.getElementById('feedback2').value.trim() || 'No comments'
-            };
-
-            // Collect ratings for each question
-            document.querySelectorAll('.question').forEach((question, index) => {
-                const hiddenInput = question.querySelector('input[type="hidden"]');
-                formData[`rating${index + 1}`] = hiddenInput.value || 'No response'; // Add default value for empty ratings
-            });
-
-            // Log form data to console for debugging
-            console.log("Form data to be sent to EmailJS:", formData);
-
-            // Send form data using EmailJS
-            emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
-                .then(function(response) {
-                    alert("Survey submitted successfully!");
-                    document.getElementById('survey-form').reset();
-                    window.location.href = "thank_you.html"; // Redirect after successful submission
-                }, function(error) {
-                    alert("An error occurred. Please try again.");
-                    console.error("Error sending email:", error);
-                });
         });
     });
+
+    // Form submit handler
+    document.getElementById('survey-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent form default submission
+        
+        // Get feedback comments
+        const formData = {
+            feedback1: document.getElementById('feedback1').value.trim() || 'No comments',
+            feedback2: document.getElementById('feedback2').value.trim() || 'No comments'
+        };
+
+        // Collect ratings for each question
+        document.querySelectorAll('.question').forEach((question, index) => {
+            const hiddenInput = question.querySelector('input[type="hidden"]');
+            formData[`rating${index + 1}`] = hiddenInput.value || 'No response'; // Add default value for empty ratings
+        });
+
+        // Log form data to console for debugging
+        console.log("Form data to be sent to EmailJS:", formData);
+
+        // Send form data using EmailJS
+        emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
+            .then(function(response) {
+                console.log("Email sent successfully:", response); // Log successful response
+                alert("Survey submitted successfully!"); // Alert user for success
+                
+                // After sending email and confirmation, reset form data and redirect
+                document.getElementById('survey-form').reset();
+                setTimeout(function() {
+                    window.location.href = "thank_you.html"; // Redirect after success
+                }, 500); // Short delay to ensure form reset before redirect
+            }, function(error) {
+                alert("An error occurred. Please try again.");
+                console.error("Error sending email:", error); // Log error for debugging
+            });
+    });
+});
 </script>
 </body>
 </html>
