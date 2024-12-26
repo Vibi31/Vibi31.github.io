@@ -92,9 +92,11 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
-
-
         
+        .selected {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -280,16 +282,18 @@
         // Initialize EmailJS with your user ID
         emailjs.init('uzRzidPrUymVo71yb'); // replace this with your own UserID
 
-        // Handle button click for color change and store rating value
-        document.getElementById("survey-form").addEventListener("submit", function(e) {
+            // Collecting data
+            const form = document.getElementById('survey-form');
+
+            form.addEventListener("submit", function(e) {
                 e.preventDefault();
 
                 const formData = {};
                 let allRatings = true;
 
                 // Collect ratings
-                document.querySelectorAll(".question").forEach((question, index) => {
-                    const selectedButton = question.querySelector(".dynamic.selected");
+                document.querySelectorAll(".rating-box").forEach((box, index) => {
+                    const selectedButton = box.querySelector(".selected");
                     if (selectedButton) {
                         formData[`Question ${index + 1}`] = selectedButton.dataset.value;
                     } else {
@@ -298,19 +302,18 @@
                     }
                 });
 
-                // Collect feedback comments
+                // Collect comments (optional)
                 formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
                 formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
                 formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
 
-                // If all questions have been answered
+                // Validation before sending
                 if (allRatings) {
-                    // Send the data to EmailJS
-                    emailjs.send("your_service_id", "your_template_id", formData)
+                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
                         .then(function(response) {
                             alert("Survey submitted successfully!");
-                            document.getElementById("survey-form").reset(); // reset the form
-                            window.location.href = "thank_you.html"; // optional redirect
+                            form.reset(); // Reset the form on successful submission
+                            window.location.href = "thank_you.html"; // optional redirection
                         }, function(error) {
                             console.error("EmailJS Error:", error);
                             alert("Error sending the survey, please try again.");
@@ -320,20 +323,23 @@
                 }
             });
 
-            // Color change on button click
-            document.querySelectorAll(".rating-box button").forEach(button => {
+            // Button Color and Selection Logic
+            document.querySelectorAll('.rating-box button').forEach(button => {
                 button.addEventListener("click", function() {
-                    // Reset all buttons to default
-                    document.querySelectorAll(".rating-box button").forEach(btn => btn.classList.remove("selected"));
+                    // Get the question box for this button
+                    const ratingBox = button.closest('.rating-box');
+                    
+                    // Remove selected class from all buttons in this rating box
+                    ratingBox.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
 
-                    // Add "selected" class to the clicked button
-                    this.classList.add("selected");
+                    // Add the "selected" class to the clicked button
+                    button.classList.add("selected");
 
-                    // You can also add logic to change button color using a custom gradient here
-                    const selectedValue = this.dataset.value;
-                    let buttonColor = `rgb(${selectedValue * 25}, ${(10 - selectedValue) * 25}, 0)`; // simple gradient
-                    this.style.backgroundColor = buttonColor;
-                    this.style.color = '#fff'; // white text on selected button
+                    // Optionally, adjust the background color based on the rating value (i.e., dynamically)
+                    const selectedValue = parseInt(button.dataset.value);
+                    let buttonColor = `rgb(${selectedValue * 25}, ${(10 - selectedValue) * 25}, 0)`; // custom gradient
+                    button.style.backgroundColor = buttonColor;
+                    button.style.color = "#fff"; // white text on selected button
                 });
         });
             </script>
