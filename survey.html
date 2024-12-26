@@ -274,43 +274,52 @@
                 <input type="submit" value="Submit Survey">
             </form>
         
-            <!-- EmailJS JavaScript inclusion and survey.js -->
-            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-            <script type="text/javascript">
-                // Initialize EmailJS with your user ID
-                emailjs.init('uzRzidPrUymVo71yb');
-        
-                // Send survey data on form submit
-                document.getElementById("survey-form").addEventListener("submit", function (e) {
-                    e.preventDefault();
-        
-                    // Collect ratings and comments
-                    const formData = {};
-                    document.querySelectorAll(".question").forEach((question, index) => {
-                        const selectedButton = question.querySelector(".dynamic[style*='background-color']");
-                        formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
-                    });
-        
-                    // Add comments to formData
-                    formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
-                    formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
-                    formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
-        
-                    // Send data using EmailJS
-                    emailjs.send("service_5y79wro", "template_mwx7pyc", formData)
-                        .then(() => {
-                            alert("Survey submitted successfully!");
-                            // Clear the form after submission
-                            document.getElementById("survey-form").reset();
-        
-                            // Redirect to a "Thank You" page
-                            window.location.href = "thank_you.html";
-                        })
-                        .catch(err => {
-                            console.error("Error sending email:", err);
-                            alert("An error occurred, please try again.");
-                        });
+    <!-- EmailJS JavaScript inclusion and survey.js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your user ID
+        emailjs.init('uzRzidPrUymVo71yb'); // replace this with your own UserID
+
+        // Handle button click for color change and store rating value
+        document.querySelectorAll(".dynamic").forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove 'selected' class from all buttons
+                button.closest('.rating-box').querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+                // Add 'selected' class to clicked button
+                button.classList.add('selected');
+            });
+        });
+
+        // Handle form submission to collect data and send via EmailJS
+        document.getElementById("survey-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const formData = {};
+            document.querySelectorAll(".question").forEach((question, index) => {
+                const selectedButton = question.querySelector(".dynamic.selected");
+                formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
+            });
+
+            // Collect feedback from textareas
+            formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
+            formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
+            formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
+
+            // Send data using EmailJS
+            emailjs.send("service_5y79wro", "template_mwx7pyc", formData)
+                .then(() => {
+                    alert("Survey submitted successfully!");
+                    // Clear form after submission
+                    document.getElementById("survey-form").reset();
+
+                    // Redirect to thank you page
+                    window.location.href = "thank_you.html";
+                })
+                .catch(err => {
+                    console.error("Error sending email:", err);
+                    alert("An error occurred. Please try again.");
                 });
+        });
             </script>
 </body>
 </html>
