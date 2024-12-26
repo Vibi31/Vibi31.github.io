@@ -253,7 +253,18 @@
                 </div>
             </div>
             <!-- Repeat the above question block for more questions, from line 'question' -->
-            
+            <script>
+                const colors = [
+                    "#F6412D", "#FF5607", "#FF9800", "#FFC100", 
+                    "#F0D003", "#eae69e", "#c1cd32", "#a7cd32", "#8dcd32", "#73cd32"
+                ];
+        
+                document.querySelectorAll(".dynamic").forEach(button => {
+                    const value = parseInt(button.dataset.value, 10);
+                    button.style.backgroundColor = colors[value - 1];
+                });
+            </script>
+                        
             <form id="survey-form">
                 <!-- Other questions and inputs -->
             
