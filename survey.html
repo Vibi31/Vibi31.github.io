@@ -92,11 +92,9 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+
         
-        .selected {
-            background-color: #4CAF50;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -276,72 +274,43 @@
                 <input type="submit" value="Submit Survey">
             </form>
         
-    <!-- EmailJS JavaScript inclusion and survey.js -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-        // Initialize EmailJS with your user ID
-        emailjs.init('uzRzidPrUymVo71yb'); // replace this with your own UserID
-
-            // Collecting data
-            const form = document.getElementById('survey-form');
-
-            form.addEventListener("submit", function(e) {
-                e.preventDefault();
-
-                const formData = {};
-                let allRatings = true;
-
-                // Collect ratings
-                document.querySelectorAll(".rating-box").forEach((box, index) => {
-                    const selectedButton = box.querySelector(".selected");
-                    if (selectedButton) {
-                        formData[`Question ${index + 1}`] = selectedButton.dataset.value;
-                    } else {
-                        formData[`Question ${index + 1}`] = "No response";
-                        allRatings = false;
-                    }
-                });
-
-                // Collect comments (optional)
-                formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
-                formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
-                formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
-
-                // Validation before sending
-                if (allRatings) {
-                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
-                        .then(function(response) {
+            <!-- EmailJS JavaScript inclusion and survey.js -->
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+            <script type="text/javascript">
+                // Initialize EmailJS with your user ID
+                emailjs.init('uzRzidPrUymVo71yb');
+        
+                // Send survey data on form submit
+                document.getElementById("survey-form").addEventListener("submit", function (e) {
+                    e.preventDefault();
+        
+                    // Collect ratings and comments
+                    const formData = {};
+                    document.querySelectorAll(".question").forEach((question, index) => {
+                        const selectedButton = question.querySelector(".dynamic[style*='background-color']");
+                        formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
+                    });
+        
+                    // Add comments to formData
+                    formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
+                    formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
+                    formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
+        
+                    // Send data using EmailJS
+                    emailjs.send("service_5y79wro", "template_mwx7pyc", formData)
+                        .then(() => {
                             alert("Survey submitted successfully!");
-                            form.reset(); // Reset the form on successful submission
-                            window.location.href = "thank_you.html"; // optional redirection
-                        }, function(error) {
-                            console.error("EmailJS Error:", error);
-                            alert("Error sending the survey, please try again.");
+                            // Clear the form after submission
+                            document.getElementById("survey-form").reset();
+        
+                            // Redirect to a "Thank You" page
+                            window.location.href = "thank_you.html";
+                        })
+                        .catch(err => {
+                            console.error("Error sending email:", err);
+                            alert("An error occurred, please try again.");
                         });
-                } else {
-                    alert("Please answer all the questions before submitting!");
-                }
-            });
-
-            // Button Color and Selection Logic
-            document.querySelectorAll('.rating-box button').forEach(button => {
-                button.addEventListener("click", function() {
-                    // Get the question box for this button
-                    const ratingBox = button.closest('.rating-box');
-                    
-                    // Remove selected class from all buttons in this rating box
-                    ratingBox.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
-
-                    // Add the "selected" class to the clicked button
-                    button.classList.add("selected");
-
-                    // Optionally, adjust the background color based on the rating value (i.e., dynamically)
-                    const selectedValue = parseInt(button.dataset.value);
-                    let buttonColor = `rgb(${selectedValue * 25}, ${(10 - selectedValue) * 25}, 0)`; // custom gradient
-                    button.style.backgroundColor = buttonColor;
-                    button.style.color = "#fff"; // white text on selected button
                 });
-        });
             </script>
 </body>
 </html>
