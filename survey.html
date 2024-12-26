@@ -342,7 +342,8 @@
             // Collect feedback from both comment boxes
             formData['feedback1'] = document.getElementById('feedback1').value.trim() || 'No comments';
             formData['feedback2'] = document.getElementById('feedback2').value.trim() || 'No comments';
-
+            // Log formData to ensure all data is being collected
+            console.log(formData);
             // Send data using EmailJS
             emailjs.send('service_5y79wro', 'template_mwx7pyc', formData)
                 .then(() => {
