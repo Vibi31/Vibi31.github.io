@@ -281,43 +281,59 @@
         emailjs.init('uzRzidPrUymVo71yb'); // replace this with your own UserID
 
         // Handle button click for color change and store rating value
-        document.querySelectorAll(".dynamic").forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove 'selected' class from all buttons
-                button.closest('.rating-box').querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-                // Add 'selected' class to clicked button
-                button.classList.add('selected');
-            });
-        });
-
-        // Handle form submission to collect data and send via EmailJS
         document.getElementById("survey-form").addEventListener("submit", function(e) {
-            e.preventDefault();
+                e.preventDefault();
 
-            const formData = {};
-            document.querySelectorAll(".question").forEach((question, index) => {
-                const selectedButton = question.querySelector(".dynamic.selected");
-                formData[`Question ${index + 1}`] = selectedButton ? selectedButton.dataset.value : "No response";
+                const formData = {};
+                let allRatings = true;
+
+                // Collect ratings
+                document.querySelectorAll(".question").forEach((question, index) => {
+                    const selectedButton = question.querySelector(".dynamic.selected");
+                    if (selectedButton) {
+                        formData[`Question ${index + 1}`] = selectedButton.dataset.value;
+                    } else {
+                        formData[`Question ${index + 1}`] = "No response";
+                        allRatings = false;
+                    }
+                });
+
+                // Collect feedback comments
+                formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
+                formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
+                formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
+
+                // If all questions have been answered
+                if (allRatings) {
+                    // Send the data to EmailJS
+                    emailjs.send("your_service_id", "your_template_id", formData)
+                        .then(function(response) {
+                            alert("Survey submitted successfully!");
+                            document.getElementById("survey-form").reset(); // reset the form
+                            window.location.href = "thank_you.html"; // optional redirect
+                        }, function(error) {
+                            console.error("EmailJS Error:", error);
+                            alert("Error sending the survey, please try again.");
+                        });
+                } else {
+                    alert("Please answer all the questions before submitting!");
+                }
             });
 
-            // Collect feedback from textareas
-            formData["Feedback 1"] = document.getElementById("feedback1").value.trim();
-            formData["Feedback 2"] = document.getElementById("feedback2").value.trim();
-            formData["Feedback 3"] = document.getElementById("feedback3").value.trim();
+            // Color change on button click
+            document.querySelectorAll(".rating-box button").forEach(button => {
+                button.addEventListener("click", function() {
+                    // Reset all buttons to default
+                    document.querySelectorAll(".rating-box button").forEach(btn => btn.classList.remove("selected"));
 
-            // Send data using EmailJS
-            emailjs.send("service_5y79wro", "template_mwx7pyc", formData)
-                .then(() => {
-                    alert("Survey submitted successfully!");
-                    // Clear form after submission
-                    document.getElementById("survey-form").reset();
+                    // Add "selected" class to the clicked button
+                    this.classList.add("selected");
 
-                    // Redirect to thank you page
-                    window.location.href = "thank_you.html";
-                })
-                .catch(err => {
-                    console.error("Error sending email:", err);
-                    alert("An error occurred. Please try again.");
+                    // You can also add logic to change button color using a custom gradient here
+                    const selectedValue = this.dataset.value;
+                    let buttonColor = `rgb(${selectedValue * 25}, ${(10 - selectedValue) * 25}, 0)`; // simple gradient
+                    this.style.backgroundColor = buttonColor;
+                    this.style.color = '#fff'; // white text on selected button
                 });
         });
             </script>
