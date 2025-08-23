@@ -3,24 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Photo Portfolio</title>
+  <title>My Photography Portfolio</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: url('images/hero.jpg');">
+    <div class="overlay">
+      <h1>My Photography</h1>
+      <p>Capturing moments, one frame at a time.</p>
+      <a href="#gallery" class="btn">View My Work</a>
+    </div>
+  </section>
+
+  <!-- Navigation -->
   <header>
-    <h1>My Photography</h1>
     <nav>
-      <a href="index.html">Gallery</a>
+      <a href="index.html">Home</a>
       <a href="about.html">About Me</a>
     </nav>
   </header>
 
-  <main class="gallery">
+  <!-- Gallery Preview -->
+  <main id="gallery" class="gallery">
     <img src="images/photo1.jpg" alt="Photo 1">
     <img src="images/photo2.jpg" alt="Photo 2">
     <img src="images/photo3.jpg" alt="Photo 3">
     <img src="images/photo4.jpg" alt="Photo 4">
-    <!-- Add more images here -->
   </main>
 
   <footer>

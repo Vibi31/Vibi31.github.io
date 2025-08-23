@@ -1,20 +1,64 @@
+/* General */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    background: #f9f9f9;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #333;
+    background: #f9f9f9;
   }
   
+  /* Hero Section */
+  .hero {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .hero .overlay {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #ff6600;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .btn:hover {
+    background: #e05500;
+  }
+  
+  /* Navigation */
   header {
     background: #222;
-    color: white;
     padding: 1rem;
     text-align: center;
   }
   
   nav a {
     color: white;
-    margin: 0 10px;
+    margin: 0 15px;
     text-decoration: none;
   }
   
@@ -22,10 +66,11 @@ body {
     text-decoration: underline;
   }
   
+  /* Gallery */
   .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
+    gap: 15px;
     padding: 20px;
   }
   
@@ -33,20 +78,19 @@ body {
     width: 100%;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
   }
   
-  .about {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-    line-height: 1.6;
+  .gallery img:hover {
+    transform: scale(1.05);
   }
   
+  /* Footer */
   footer {
-    text-align: center;
-    padding: 1rem;
     background: #222;
     color: white;
+    text-align: center;
+    padding: 1rem;
     margin-top: 20px;
   }
   
