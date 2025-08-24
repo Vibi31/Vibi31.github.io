@@ -69,7 +69,7 @@ nav a:hover {
 /* Gallery */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  grid-template-columns: repeat(4, 1fr); /* 4 columns for normal rows */
   grid-auto-rows: 250px; /* base row height */
   gap: 15px;
   padding: 20px;
@@ -85,13 +85,26 @@ nav a:hover {
   cursor: pointer;
 }
 
-/* Vertical images taller */
-.gallery img.vertical {
-  grid-row: span 2; /* span 2 rows */
+/* Row with vertical images */
+.gallery-vertical {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns for vertical row */
+  grid-auto-rows: 350px; /* taller for vertical images */
+  gap: 15px;
+  padding: 0 20px 20px 20px;
 }
 
-/* Hover effect */
-.gallery img:hover {
+.gallery-vertical img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.gallery-vertical img:hover {
   transform: scale(1.05);
 }
 
@@ -138,7 +151,8 @@ footer {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 200px;
   }
-  .gallery img.vertical {
-    grid-row: span 2;
+  .gallery-vertical {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 300px;
   }
 }
