@@ -5,6 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Photography Portfolio</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* General */
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #333;
+      background: #f9f9f9;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero .overlay {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 2rem;
+      border-radius: 10px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #ff6600;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #e05500;
+    }
+
+    /* Navigation */
+    header {
+      background: #222;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <!-- Hero Section -->
@@ -24,16 +150,59 @@
     </nav>
   </header>
 
-  <!-- Gallery Preview -->
+  <!-- Gallery -->
   <main id="gallery" class="gallery">
-    <img src="images/photo1.jpg" alt="Photo 1">
-    <img src="images/photo2.jpg" alt="Photo 2">
-    <img src="images/photo3.jpg" alt="Photo 3">
-    <img src="images/photo4.jpg" alt="Photo 4">
+    <!-- Row 1 -->
+    <img src="images/thumbs/photo1.jpg" data-full="images/photo1.jpg" alt="Photo 1" loading="lazy">
+    <img src="images/thumbs/photo2.jpg" data-full="images/photo2.jpg" alt="Photo 2" loading="lazy">
+    <img src="images/thumbs/photo3.jpg" data-full="images/photo3.jpg" alt="Photo 3" loading="lazy">
+    <img src="images/thumbs/photo4.jpg" data-full="images/photo4.jpg" alt="Photo 4" loading="lazy">
+
+    <!-- Row 2 -->
+    <img src="images/thumbs/photo5.jpg" data-full="images/photo5.jpg" alt="Photo 5" loading="lazy">
+    <img src="images/thumbs/photo6.jpg" data-full="images/photo6.jpg" alt="Photo 6" loading="lazy">
+    <img src="images/thumbs/photo7.jpg" data-full="images/photo7.jpg" alt="Photo 7" loading="lazy">
+    <img src="images/thumbs/photo8.jpg" data-full="images/photo8.jpg" alt="Photo 8" loading="lazy">
+
+    <!-- Row 3 -->
+    <img src="images/thumbs/photo9.jpg" data-full="images/photo9.jpg" alt="Photo 9" loading="lazy">
+    <img src="images/thumbs/photo10.jpg" data-full="images/photo10.jpg" alt="Photo 10" loading="lazy">
+    <img src="images/thumbs/photo11.jpg" data-full="images/photo11.jpg" alt="Photo 11" loading="lazy">
+    <img src="images/thumbs/photo12.jpg" data-full="images/photo12.jpg" alt="Photo 12" loading="lazy">
+
+    <!-- Row 3 -->
+    <img src="images/thumbs/photo13.jpg" data-full="images/photo9.jpg" alt="Photo 13" loading="lazy">
+    <img src="images/thumbs/photo14.jpg" data-full="images/photo10.jpg" alt="Photo 14" loading="lazy">
+    <img src="images/thumbs/photo15.jpg" data-full="images/photo11.jpg" alt="Photo 15" loading="lazy">
+    <img src="images/thumbs/photo16.jpg" data-full="images/photo12.jpg" alt="Photo 16" loading="lazy">
+    <img src="images/thumbs/photo17.jpg" data-full="images/photo12.jpg" alt="Photo 17" loading="lazy">
   </main>
 
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox">
+    <span class="close">&times;</span>
+    <img class="lightbox-img" src="">
+  </div>
+
   <footer>
-    <p>© 2025 My Photography</p>
+    <p>© 2025 Vibishan</p>
   </footer>
+
+  <script>
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.querySelector(".lightbox-img");
+    const closeBtn = document.querySelector(".close");
+
+    document.querySelectorAll(".gallery img").forEach(img => {
+      img.addEventListener("click", () => {
+        lightbox.style.display = "flex";
+        lightboxImg.src = img.dataset.full; // load full-res image
+      });
+    });
+
+    closeBtn.addEventListener("click", () => {
+      lightbox.style.display = "none";
+    });
+  </script>
 </body>
 </html>
